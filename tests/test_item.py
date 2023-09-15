@@ -1,5 +1,6 @@
 import pytest
-
+import pathlib
+from pathlib import Path
 from src.item import Item
 
 
@@ -62,3 +63,24 @@ def test_pay_rate():
     assert item.pay_rate == 1.2
     item.reset_pay_rate()
     assert item.pay_rate == 1.0
+
+def test_set_name_within_limit():
+    item = Item("Short Name", 10.0, 5)
+    assert item.name == "Short Name"
+
+    item.name = "New Name"
+    assert item.name == "New Name"
+
+def test_set_name_exceeds_limit():
+    item = Item(name="Телефон", price=10000, quantity=5)
+    assert item.name == "Телефон"
+    item.name = "Планшет"
+    assert item.name == "Планшет"
+    item.name = "0987654321Long Name Exceeding Limit"
+    assert item.name == "0987654321"
+    assert len(item.name) == 10  # Проверяем, что имя состоит ровно из 10 символов
+
+def test_instiate_from_csv():
+    file_path = Path(pathlib.Path.cwd(),'src', 'items.csv')
+    Item.instantiate_from_csv(file_path)  # создание объектов из данных файла
+    assert len(Item.all) == 5
