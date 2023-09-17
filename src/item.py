@@ -1,5 +1,5 @@
-import os
 import csv
+import os
 
 class Item:
     all = []  # Список для хранения всех экземпляров класса Item
@@ -18,7 +18,8 @@ class Item:
         self.__name = name  # Приватный атрибут с наименованием товара
         self.price = price  # Атрибут с ценой товара
         self.quantity = quantity  # Атрибут с количеством товара в наличии
-        self.__class__.all.append(self)  # Добавление текущего экземпляра в список всех экземпляров класса
+        self.__class__.all.append(
+            self)  # Добавление текущего экземпляра в список всех экземпляров класса
 
     @property
     def name(self):
@@ -98,22 +99,16 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, file_name):
-        """
-        Инициализирует экземпляры класса Item данными из CSV-файла.
-
-        Args:
-            file_name (str): Путь к CSV-файлу с данными.
-
-        """
-        file_path = "../src/items.csv"  # Путь к CSV-файлу
+        # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
+        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), file_name))
         with open(file_path, newline='', encoding='windows-1251') as csvfile:
             reader = csv.DictReader(csvfile)
-            cls.all.clear()  # Очистка списка всех экземпляров класса перед инициализацией
+            cls.all.clear()
             for row in reader:
                 name = row['name']
                 price = cls.string_to_number(row['price'])
                 quantity = int(row['quantity'])
-                cls(name, price, quantity)  # Создание нового экземпляра класса
+                cls(name, price, quantity)
 
     @staticmethod
     def string_to_number(string):
