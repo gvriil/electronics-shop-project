@@ -149,3 +149,17 @@ def test_item_str():
     """
     item = Item("Смартфон", 15000, 10)
     assert str(item) == "Смартфон"
+
+
+def test_instantiate_from_corrupted_csv():
+    """
+    Тестирование метода instantiate_from_csv класса Item на обработку поврежденного CSV-файла.
+    """
+
+    # Путь к поврежденному CSV-файлу (например, уберите одну из колонок или строки)
+    file_name = 'tests/test_damaged_data.csv'
+
+    # Попробуйте обработать поврежденный файл с помощью метода instantiate_from_csv.
+    # Ожидается, что при обработке поврежденного файла возникнет исключение (любого типа).
+    with pytest.raises(Exception):
+        Item.instantiate_from_csv(file_name)
