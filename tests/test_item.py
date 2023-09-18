@@ -114,6 +114,12 @@ def test_instiate_from_csv():
     Тестирование метода instantiate_from_csv() класса Item.
     Убеждаемся, что объекты корректно создаются из данных файла CSV.
     """
-    file_path = Path(__file__).resolve().parent / 'test_data.csv'
+
+    file_path = 'tests/test_data.csv'
+
     Item.instantiate_from_csv(file_path)
     assert len(Item.all) == 5  # Проверяем, что создано 5 объектов
+    file_path = 'tests/not_found.csv'
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv(file_path)
+

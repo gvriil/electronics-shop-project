@@ -100,7 +100,8 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls, file_name):
         # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
-        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), file_name))
+        file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0], *os.path.split(file_name))
+        print(file_path)
         with open(file_path, newline='', encoding='windows-1251') as csvfile:
             reader = csv.DictReader(csvfile)
             cls.all.clear()
