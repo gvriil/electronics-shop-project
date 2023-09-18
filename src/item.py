@@ -1,6 +1,7 @@
 import csv
 import os
 
+
 class Item:
     all = []  # Список для хранения всех экземпляров класса Item
     pay_rate = 1.0  # Ставка оплаты по умолчанию
@@ -20,6 +21,19 @@ class Item:
         self.quantity = quantity  # Атрибут с количеством товара в наличии
         self.__class__.all.append(
             self)  # Добавление текущего экземпляра в список всех экземпляров класса
+
+    def __repr__(self):
+        """
+        Магический метод __repr__, который возвращает строковое представление объекта.
+        """
+        return f"Item('{self.name}', {self.price}, {self.quantity})"
+
+    def __str__(self):
+        """
+        Магический метод __str__, который возвращает строковое представление объекта при вызове str().
+        В данной реализации, это просто имя товара.
+        """
+        return self.name
 
     @property
     def name(self):
@@ -100,7 +114,8 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls, file_name):
         # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
-        file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0], *os.path.split(file_name))
+        file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0],
+                                 *os.path.split(file_name))
         print(file_path)
         with open(file_path, newline='', encoding='windows-1251') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -110,18 +125,7 @@ class Item:
                 price = cls.string_to_number(row['price'])
                 quantity = int(row['quantity'])
                 cls(name, price, quantity)
-    def __repr__(self):
-        """
-        Магический метод __repr__, который возвращает строковое представление объекта.
-        """
-        return f"Item('{self.name}', {self.price}, {self.quantity})"
 
-    def __str__(self):
-        """
-        Магический метод __str__, который возвращает строковое представление объекта при вызове str().
-        В данной реализации, это просто имя товара.
-        """
-        return self.name
     @staticmethod
     def string_to_number(string):
         """
