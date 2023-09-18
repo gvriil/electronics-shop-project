@@ -110,7 +110,18 @@ class Item:
                 price = cls.string_to_number(row['price'])
                 quantity = int(row['quantity'])
                 cls(name, price, quantity)
+    def __repr__(self):
+        """
+        Магический метод __repr__, который возвращает строковое представление объекта.
+        """
+        return f"Item('{self.name}', {self.price}, {self.quantity})"
 
+    def __str__(self):
+        """
+        Магический метод __str__, который возвращает строковое представление объекта при вызове str().
+        В данной реализации, это просто имя товара.
+        """
+        return self.name
     @staticmethod
     def string_to_number(string):
         """
