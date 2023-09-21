@@ -184,7 +184,7 @@ def test_instantiate_from_corrupted_csv():
 # Тест для проверки атрибутов Phone
 def test_items_attributes(item_instance):
     assert item_instance.name == 'Смартфон'
-    assert item_instance.price == 10000
+    assert item_instance.price == 20000
     assert item_instance.quantity == 20
 
 
@@ -200,12 +200,13 @@ def test_item_phone_addition(item_instance, phone_instance):
 
 # Тест для проверки сложения двух экземпляров Item
 def test_item_addition(item_instance):
+    item_instance_2 = Item("Другой Смартфон", 10000, 10)
     result = item_instance + item_instance_2
-    assert result == 23  # Сумма количества товаров item_instance и item_instance_2
+    assert result == 30  # Сумма количества товаров item_instance и item_instance_2
 
     # Проверяем, что item_instance и item_instance_2 не изменились после сложения
     assert item_instance.quantity == 20
-    assert item_instance_2.quantity == 3
+    assert item_instance_2.quantity == 10
 
 
 # Тест для проверки сложения экземпляра Item с объектом другого типа
