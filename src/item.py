@@ -22,6 +22,13 @@ class Item:
         self.__class__.all.append(
             self)  # Добавление текущего экземпляра в список всех экземпляров класса
 
+    def __add__(self, other):
+        from src.phone import Phone
+        if isinstance(other, (Item, Phone)):
+            return self.quantity + other.quantity
+        else:
+            raise TypeError('Нельзя сложить объект этого типа с объектом другого типа')
+
     def __repr__(self):
         """
         Магический метод __repr__, который возвращает строковое представление объекта.
