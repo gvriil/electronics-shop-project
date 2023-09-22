@@ -1,4 +1,7 @@
-class Phone:
+from src.item import Item  # Импортируем базовый класс Item
+
+
+class Phone(Item):
     def __init__(self, name, price, quantity, number_of_sim):
         """
         Создает экземпляр класса Phone.
@@ -8,24 +11,8 @@ class Phone:
         :param quantity: Количество смартфонов в наличии.
         :param number_of_sim: Количество поддерживаемых сим-карт.
         """
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-        self.number_of_sim = number_of_sim
-
-    def __add__(self, other):
-        """
-        Переопределение оператора сложения (+) для объектов Phone и Item.
-
-        :param other: Другой объект (Phone или Item).
-        :return: Сумма количества товаров из self и other.
-        :raise TypeError: Если other не является объектом типа Phone или Item.
-        """
-        from src.item import Item  # Импортируем Item для проверки типа
-        if isinstance(other, (Item, Phone)):
-            return self.quantity + other.quantity
-        else:
-            raise TypeError('Нельзя сложить объект этого типа с объектом другого типа')
+        super().__init__(name, price, quantity)  # Вызываем конструктор базового класса
+        self.number_of_sim = number_of_sim  # Добавляем новый атрибут
 
     def __str__(self):
         """
@@ -53,7 +40,6 @@ class Phone:
         """
         return self.__number_of_sim
 
-
     @number_of_sim.setter
     def number_of_sim(self, value):
         """
@@ -68,4 +54,3 @@ class Phone:
         if value < 0:
             raise ValueError("Количество сим-карт не может быть отрицательным")
         self.__number_of_sim = value
-
