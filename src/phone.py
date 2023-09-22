@@ -42,3 +42,30 @@ class Phone:
         :return: Строковое представление объекта Phone.
         """
         return f"Phone('{self.name}', {self.price}, {self.quantity}, {self.number_of_sim})"
+
+    @property
+    def number_of_sim(self):
+        """
+        Геттер для количества сим-карт.
+
+        Returns:
+            int: Количество сим-карт.
+        """
+        return self.__number_of_sim
+
+
+    @number_of_sim.setter
+    def number_of_sim(self, value):
+        """
+        Сеттер для количества сим-карт. Проверяет, что количество сим-карт не отрицательное.
+
+        Args:
+            value (int): Новое количество сим-карт.
+
+        Raises:
+            ValueError: Если количество сим-карт отрицательное.
+        """
+        if value < 0:
+            raise ValueError("Количество сим-карт не может быть отрицательным")
+        self.__number_of_sim = value
+

@@ -1,6 +1,8 @@
 import pytest
-from src.phone import Phone
+
 from src.item import Item
+from src.phone import Phone
+
 
 # Фикстура для создания экземпляра Phone
 @pytest.fixture
@@ -13,6 +15,7 @@ def phone_instance():
     """
     return Phone("iPhone 14", 120_000, 5, 2)
 
+
 # Фикстура для создания экземпляра Item
 @pytest.fixture
 def item_instance():
@@ -24,6 +27,7 @@ def item_instance():
     """
     return Item("Смартфон", 10000, 20)
 
+
 @pytest.fixture
 def other_object():
     """
@@ -34,6 +38,7 @@ def other_object():
     """
     # Здесь определяйте ваш объект или значение
     return "some_value"
+
 
 # Тест для проверки атрибутов Phone
 def test_phone_attributes(phone_instance):
@@ -47,6 +52,7 @@ def test_phone_attributes(phone_instance):
     assert phone_instance.price == 120_000
     assert phone_instance.quantity == 5
     assert phone_instance.number_of_sim == 2
+
 
 # Тест для проверки сложения Item и Phone
 def test_item_phone_addition(item_instance, phone_instance):
@@ -64,6 +70,7 @@ def test_item_phone_addition(item_instance, phone_instance):
     assert item_instance.quantity == 20
     assert phone_instance.quantity == 5
 
+
 # Тест для проверки сложения двух экземпляров Phone
 def test_phone_phone_addition(phone_instance):
     """
@@ -80,6 +87,7 @@ def test_phone_phone_addition(phone_instance):
     assert phone_instance.quantity == 5
     assert phone_instance_2.quantity == 3
 
+
 # Тест для проверки операции сложения экземпляра Phone с объектом другого типа
 def test_phone_addition_with_other_type_should_raise_error(phone_instance, other_object):
     """
@@ -94,6 +102,7 @@ def test_phone_addition_with_other_type_should_raise_error(phone_instance, other
     except TypeError as e:
         assert str(e) == 'Нельзя сложить объект этого типа с объектом другого типа'
 
+
 # Тест для проверки метода str класса Phone
 def test_phone_str_representation(phone_instance):
     """
@@ -104,6 +113,7 @@ def test_phone_str_representation(phone_instance):
     """
     assert str(phone_instance) == 'iPhone 14'
 
+
 # Тест для проверки метода repr класса Phone
 def test_phone_repr_representation(phone_instance):
     """
@@ -113,3 +123,18 @@ def test_phone_repr_representation(phone_instance):
         phone_instance (Phone): Экземпляр Phone.
     """
     assert repr(phone_instance) == "Phone('iPhone 14', 120000, 5, 2)"
+
+
+# Тест для проверки сеттера number_of_sim
+def test_set_number_of_sim(phone_instance):
+    """
+    Тест для свойства number_of_sim класса Phone.
+    Проверяет:
+    - свойство корректно возвращает количество сим-карт.
+    - сеттер устанавливает положительное количество сим-карт.
+    - сеттер выбрасывает исключение при попытке установить отрицательное количество сим-карт.
+    """
+    phone_instance.number_of_sim = 3
+    assert phone_instance.number_of_sim == 3
+    with pytest.raises(ValueError):
+        phone_instance.number_of_sim = -1
