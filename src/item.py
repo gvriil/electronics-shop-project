@@ -7,6 +7,7 @@ class Item:
     pay_rate = 1.0  # Ставка оплаты по умолчанию
 
     def __init__(self, name, price, quantity):
+        super().__init__()
         """
         Конструктор класса Item.
 
@@ -19,8 +20,8 @@ class Item:
         self.__name = name  # Приватный атрибут с наименованием товара
         self.price = price  # Атрибут с ценой товара
         self.quantity = quantity  # Атрибут с количеством товара в наличии
-        # self.__class__.all.append(
-        #     self)  # Добавление текущего экземпляра в список всех экземпляров класса
+        self.__class__.all.append(
+            self)  # Добавление текущего экземпляра в список всех экземпляров класса
 
     def __add__(self, other):
         from src.phone import Phone
