@@ -120,7 +120,28 @@ class Item:
         cls.pay_rate = 1.0
 
     @classmethod
-    def instantiate_from_csv(cls, file_name):
+    def instantiate_from_csv(cls, file_name='src/items.csv'):
+        try:
+            file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0],
+                                     *os.path.split(file_name))
+            print(file_path)
+            with open(file_path, newline='', encoding='windows-1251') as csvfile:
+                reader = csv.DictReader(csvfile)
+                cls.all.clear()
+                # Проверка наличия необходимых столбцов в CSV-файле
+                required_columns = {'name', 'price', 'quantity'}
+                if not required_columns.issubset(reader.fieldnames):
+                    raise InstantiateCSVError(
+                        "Файл item.csv поврежден: отсутствуют необходимые столбцы")
+                for row in reader:
+                    name = row['name']
+                    price = cls.string_to_number(row['price'])
+                    quantity = int(row['quantity'])
+                    cls(name, price, quantity)
+        except FileNotFoundError as e:
+            raise FileNotFoundError("Отсутствует файл item.csv") from e
+        except InstantiateCSVError as e:
+            raise e
         # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
         file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0],
                                  *os.path.split(file_name))
@@ -147,3 +168,8 @@ class Item:
 
         """
         return int(float(string))
+
+class InstantiateCSVError(Exception):
+    def __init__(self, message="Файл item.csv поврежден"):
+        self.message = message
+        super().__init__(self.message)

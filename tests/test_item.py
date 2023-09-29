@@ -1,7 +1,6 @@
 import pytest
-
-from src.item import Item
-from src.phone import Phone
+import os
+from src.item import Item, InstantiateCSVError
 
 
 # Тест создания экземпляра товара (Item)
@@ -171,47 +170,75 @@ def test_instantiate_from_corrupted_csv():
     """
     Тестирование метода instantiate_from_csv класса Item на обработку поврежденного CSV-файла.
     """
+    # Получаем текущую директорию, где находится тест
+    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Путь к поврежденному CSV-файлу (например, уберите одну из колонок или строки)
-    file_name = 'tests/test_damaged_data.csv'
+    # Полный путь к временному файлу
+    temp_file_path = os.path.join(current_directory, 'test_damaged_data.csv')
 
-    # Попробуйте обработать поврежденный файл с помощью метода instantiate_from_csv.
-    # Ожидается, что при обработке поврежденного файла возникнет исключение (любого типа).
-    with pytest.raises(Exception):
-        Item.instantiate_from_csv(file_name)
+    with open(temp_file_path, 'w') as file:
+        file.write("name,price\nProduct1,10.0\nProduct2")
+    # Создаем временный файл с неполными данными
+
+    with pytest.raises(InstantiateCSVError, match="Файл item.csv поврежден"):
+        Item.instantiate_from_csv(file_name=temp_file_path)
+
+    # Удаляем временный файл
+    if os.path.exists(temp_file_path):
+        os.remove(temp_file_path)
 
 
 # Тест для проверки атрибутов Phone
 def test_items_attributes(item_instance):
+    """
+    Тестирование атрибутов экземпляра Item.
+    Убеждаемся, что атрибуты экземпляра корректно установлены.
+    """
     assert item_instance.name == 'Смартфон'
     assert item_instance.price == 20000
     assert item_instance.quantity == 20
 
 
-# Тест для проверки сложения Item и Phone
 def test_item_phone_addition(item_instance, phone_instance):
+    """
+    Тест для проверки сложения экземпляра Item и Phone.
+    Убеждаемся, что сложение правильно вычисляет сумму количества товаров.
+    Проверяем, что item_instance и phone_instance не изменились после сложения.
+    """
     result = item_instance + phone_instance
     assert result == 25  # Сумма количества товаров из item_instance и phone_instance
-
-    # Проверяем, что item_instance и phone_instance не изменились после сложения
     assert item_instance.quantity == 20
     assert phone_instance.quantity == 5
 
 
-# Тест для проверки сложения двух экземпляров Item
 def test_item_addition(item_instance):
+    """
+    Тест для проверки сложения двух экземпляров Item.
+    Убеждаемся, что сложение правильно вычисляет сумму количества товаров.
+    Проверяем, что item_instance и item_instance_2 не изменились после сложения.
+    """
     item_instance_2 = Item("Другой Смартфон", 10000, 10)
     result = item_instance + item_instance_2
     assert result == 30  # Сумма количества товаров item_instance и item_instance_2
-
-    # Проверяем, что item_instance и item_instance_2 не изменились после сложения
     assert item_instance.quantity == 20
     assert item_instance_2.quantity == 10
 
 
-# Тест для проверки сложения экземпляра Item с объектом другого типа
 def test_item_addition_with_other_type_should_raise_error(item_instance, other_object):
+    """
+    Тест для проверки сложения экземпляра Item с объектом другого типа.
+    Ожидаем поднятие исключения TypeError.
+    """
     try:
         item_instance + other_object
     except TypeError as e:
         assert str(e) == 'Нельзя сложить объект этого типа с объектом другого типа'
+
+
+def test_instantiate_from_csv_file_not_found():
+    """
+    Тестирование метода instantiate_from_csv класса Item на обработку отсутствия файла.
+    Ожидаем поднятие исключения FileNotFoundError.
+    """
+    with pytest.raises(FileNotFoundError, match="Отсутствует файл item.csv"):
+        Item.instantiate_from_csv(file_name='non_existent_file.csv')
