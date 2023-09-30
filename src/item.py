@@ -122,6 +122,7 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls, file_name='src/items.csv'):
         try:
+            # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
             file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0],
                                      *os.path.split(file_name))
             print(file_path)
@@ -142,18 +143,7 @@ class Item:
             raise FileNotFoundError("Отсутствует файл item.csv") from e
         except InstantiateCSVError as e:
             raise e
-        # Получить абсолютный путь к файлу на основе текущей директории и относительного пути
-        file_path = os.path.join(os.path.split(os.path.dirname(__file__))[0],
-                                 *os.path.split(file_name))
-        print(file_path)
-        with open(file_path, newline='', encoding='windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            cls.all.clear()
-            for row in reader:
-                name = row['name']
-                price = cls.string_to_number(row['price'])
-                quantity = int(row['quantity'])
-                cls(name, price, quantity)
+
 
     @staticmethod
     def string_to_number(string):
